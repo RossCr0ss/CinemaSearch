@@ -15,7 +15,7 @@
                 </div>
             </article>
         </div>
-        <div class="movies__nav" :class="{'is-hidden' : currentPage == totalPages}">
+        <div class="more" :class="{'is-hidden' : currentPage == totalPages}">
             <button @click="loadMore" class="button">Load More</button>
         </div>
     </div>

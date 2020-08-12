@@ -2,41 +2,46 @@
     <transition name="modal-fade">
         <div class="modal-backdrop">
             <div class="modal">
-                <header class="modal-header" id="modalTitle">
+                <header class="modal__header">
                     <slot name="header">
-                        This is the default title!
-                        <button
-                            type="button"
-                            class="btn-close"
-                            @click="close"
-                        >x</button>
+                        <h1 class="title">Please, write the title of the movie.</h1>
+                        <button type="button" class="btn-close" @click="close">x</button>
                     </slot>
                 </header>
-                <!-- <section class="modal-body" id="modalDescription">
-                    <slot name="body">I'm the default body!</slot>
-                </section>-->
 
                 <div class="search">
-                    <h1>Search</h1>
-                    <input type="text" v-model="query" @keyup="getResult(query)" />
-                    <div v-for="result in results" :key="result.id">
-                        <p>{{result.title}}</p>
-                        <img
-                            v-bind:src="'http://image.tmdb.org/t/p/w500/' +    result.poster_path"
-                            width="100px"
+                    <form class="form" @submit.prevent="getResult(query)">
+                        <input
+                            class="input"
+                            type="text"
+                            v-model.lazy="query"
+                            @keyup.enter.prevent="getResult(query)"
                         />
+                    </form>
+                    <div class="wrapper">
+                        <div class="item" v-for="result in results" :key="result.id">
+                            <h3>{{result.title}}</h3>
+                            <div class="item__content">
+                                <img
+                                    v-bind:src="'http://image.tmdb.org/t/p/w500/' + result.poster_path"
+                                    class="img"
+                                />
+                                <ul class="info">
+                                    <li class="info__item">
+                                        <h3>{{result.title}}</h3>
+                                    </li>
+                                    <li class="info__item">{{result.release_date}}</li>
+                                    <li class="info__item">
+                                        <b>{{result.vote_average}}</b>
+                                    </li>
+                                    <li class="info__item">
+                                        <i>{{result.overview}}</i>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- <footer class="modal-footer">
-                    <slot name="footer">
-                        I'm the default footer!
-                        <button
-                            type="button"
-                            class="btn-green"
-                            @click="close"
-                        >Close me!</button>
-                    </slot>
-                </footer>-->
             </div>
         </div>
     </transition>
@@ -50,6 +55,8 @@ export default {
     data() {
         return {
             showModal: false,
+            baseUrl: 'https://api.themoviedb.org/3',
+            apiKey: '52c030c67dfc0498ec8a8e7cb063a13b',
             query: '',
             results: '',
         }
@@ -61,8 +68,7 @@ export default {
         getResult(query) {
             axios
                 .get(
-                    'https://api.themoviedb.org/3/search/movie?api_key=52c030c67dfc0498ec8a8e7cb063a13b' +
-                        query
+                    `${this.baseUrl}/search/movie?api_key=${this.apiKey}&language=en-US&query=${query}&page=1&include_adult=false`
                 )
                 .then((response) => {
                     this.results = response.data.results
@@ -73,7 +79,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -87,49 +93,99 @@ export default {
 }
 
 .modal {
-    background: #ffffff;
+    background: #fff;
     box-shadow: 2px 2px 20px 1px;
-    overflow-x: auto;
     display: flex;
     flex-direction: column;
-}
+    width: 600px;
+    padding: 10px 20px;
 
-.modal-header,
-.modal-footer {
-    padding: 15px;
-    display: flex;
-}
+    &__header {
+        border-bottom: 1px solid #eee;
+        color: #2b3380;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-.modal-header {
-    border-bottom: 1px solid #eeeeee;
-    color: #4aae9b;
-    justify-content: space-between;
-}
+        .title {
+            width: calc(100% - 24px);
+        }
 
-.modal-footer {
-    border-top: 1px solid #eeeeee;
-    justify-content: flex-end;
-}
+        .btn-close {
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            font-weight: bold;
+            background: transparent;
+            width: 100%;
+            display: flex;
+            width: 24px;
+            justify-content: center;
+            align-items: center;
+        }
+    }
 
-.modal-body {
-    position: relative;
-    padding: 20px 10px;
-}
+    .search {
+        display: flex;
+        flex-direction: column;
 
-.btn-close {
-    border: none;
-    font-size: 20px;
-    padding: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #4aae9b;
-    background: transparent;
-}
+        .form {
+            margin: 10px 0;
 
-.btn-green {
-    color: white;
-    background: #4aae9b;
-    border: 1px solid #4aae9b;
-    border-radius: 2px;
+            .input {
+                border: none;
+                background: #2b3380;
+                color: #FFF;
+                border-radius: 0.25rem;
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        .wrapper {
+            overflow: auto;
+            max-height: 600px;
+
+            .item {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                margin: 5px 0;
+                border-radius: 3px;
+                padding: 5px 10px;
+                border-bottom: 1px solid grey;
+
+                h3 {
+                    margin: 10px 0;
+                }
+
+                &__content {
+                    display: flex;
+                    justify-content: flex;
+
+                    .img {
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        height: 360px;
+                        width: 240px;
+                    }
+
+                    .info {
+                        list-style-type: none;
+                        margin-left: 10px;
+                        width: calc(100% - 250px);
+                        padding: 5px;
+
+                        &__item {
+                            margin: 5px 0;
+                        }
+
+                        &__item:last-child {
+                            text-align: justify;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 </style>
