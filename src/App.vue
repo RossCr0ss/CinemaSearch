@@ -1,16 +1,19 @@
 <template>
     <div id="app">
-        <Header/>
+        <Header />
+        <FilmList />
     </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
+import FilmList from '@/components/FilmList.vue'
 
 export default {
     name: 'App',
     components: {
         Header,
+        FilmList,
     },
 }
 </script>
@@ -27,12 +30,12 @@ export default {
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 ul[class],
 ol[class] {
-  padding: 0;
+    padding: 0;
 }
 
 body,
@@ -49,47 +52,47 @@ figcaption,
 blockquote,
 dl,
 dd {
-  margin: 0;
+    margin: 0;
 }
 
 body {
-  min-height: 100vh;
-  scroll-behavior: smooth;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
+    min-height: 100vh;
+    scroll-behavior: smooth;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
 }
 
 ul[class],
 ol[class] {
-  list-style: none;
+    list-style: none;
 }
 
 a:not([class]) {
-  text-decoration-skip-ink: auto;
+    text-decoration-skip-ink: auto;
 }
 
 img {
-  max-width: 100%;
-  display: block;
+    max-width: 100%;
+    display: block;
 }
 
 article > * + * {
-  margin-top: 1em;
+    margin-top: 1em;
 }
 
 input,
 button,
 textarea,
 select {
-  font: inherit;
+    font: inherit;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 </style>
