@@ -15,6 +15,9 @@
                 </div>
             </article>
         </div>
+        <div class="movies__nav" :class="{'is-hidden' : currentPage == totalPages}">
+            <button @click="loadMore" class="button">Load More</button>
+        </div>
     </div>
 </template>
 
@@ -23,35 +26,48 @@ import axios from 'axios'
 
 export default {
     name: 'FilmList',
+    components: {
+        
+    },
     data() {
         return {
             results: [],
             baseUrl: 'https://api.themoviedb.org/3',
             apiKey: '52c030c67dfc0498ec8a8e7cb063a13b',
-            page: 1,
+            currentPage: 1,
+            totalPages: 500,
         }
     },
-    mounted() {
-        axios
-            .get(
-                `${this.baseUrl}/movie/popular?api_key=${this.apiKey}&language=en-US&page=${this.page}`
-            )
-            .then((response) => {
+    computed: {
+        request() {
+            return `${this.baseUrl}/movie/popular?api_key=${this.apiKey}&language=en-US&page=${this.currentPage}`
+        },
+    },
+    created() {
+        this.fetchFilms()
+    },
+    methods: {
+        fetchFilms() {
+            axios.get(this.request).then((response) => {
                 this.results = response.data.results
                 console.log(this.results)
             })
+        },
+        loadMore() {
+            this.currentPage++
+            this.fetchFilms()
+        },
     },
 }
 </script>
 
 <style lang="scss">
-
 .film_list {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 60%;
-    margin: 0 auto;
+    margin: 0 auto 20px;
 
     .title {
         margin: 20px 0;
@@ -61,7 +77,8 @@ export default {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: center;
+        margin-bottom: 20px;
 
         .shadow {
             -webkit-box-shadow: 3px 3px 5px 6px #ccc;
@@ -70,7 +87,7 @@ export default {
         }
 
         .item {
-            width: calc(33% - 10px);
+            width: 240px;
             margin: 5px;
             display: flex;
             flex-direction: column;
